@@ -1,5 +1,5 @@
 #include "Line.h"
-#include "math.h"
+#include <math.h>
 
 
 sf::Vector2f Line::newWormHeadPosition(float step)

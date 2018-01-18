@@ -2,7 +2,7 @@
 #include <SFML/Graphics.hpp>
 
 
-class Circle
+class Circle 
 {
 protected:
     int radius;
@@ -15,8 +15,7 @@ public:
     sf::CircleShape circle;
     static int minRadius, maxRadius;
     void drawCircle();
-    Circle(sf::RenderWindow &Window);
-
+    Circle(sf::RenderWindow &window);
     ~Circle();
 };
 

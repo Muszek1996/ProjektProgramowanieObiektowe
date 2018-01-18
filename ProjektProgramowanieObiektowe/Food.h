@@ -6,11 +6,11 @@ class Food : public Circle
 public:
     static int foodAtm;
     static int amount;
-    static int minRadius, maxRadius;
+    sf::RenderWindow Window;
     Food * next_food;
 
 
-    Food(sf::RenderWindow &Window);
+    Food(sf::RenderWindow &window);
     void drawFood();
     ~Food();
 };

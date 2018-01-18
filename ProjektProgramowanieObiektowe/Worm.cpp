@@ -2,39 +2,37 @@
 #include "Line.h"
 #include "SFML/Graphics.hpp"
 #include <iostream>
-
+#include <random>;
+std::random_device randgen;
+std::uniform_real_distribution<float> genDiretion(-0.3, 0.3);
+std::uniform_real_distribution<float> gen2(-10,10);
 
 void Worm::grow(unsigned weight)
 {
-    sf::CircleShape* wormPartsnew = new sf::CircleShape[length+weight];
+
+    sf::CircleShape* wormPartsnew = new sf::CircleShape[length+(weight/10)];
     for (int i = 0; i < length; i++)
     {
         wormPartsnew[i] = wormParts[i];
     }
-    for (int i = length; i < length+weight; i++)
+    int old_length = length;
+    length += (weight / 10);
+    for (old_length; old_length < length; old_length++)
     {
-
-        wormPartsnew[i] = sf::CircleShape();
-        wormPartsnew[i].setRadius(radius);
-        wormPartsnew[i].move(-i * radius, 0);
-        wormPartsnew[i].move(1000, 1000);
+        wormPartsnew[old_length] = sf::CircleShape();
+        wormPartsnew[old_length].setRadius(radius);
+        wormPartsnew[old_length].setPosition(wormParts[old_length - 1].getPosition());
     }
     wormParts = wormPartsnew;
 }
 
-int Worm::setSpeed(int newSpeed)
-{
-    if (newSpeed > 10)
-    speed = newSpeed;
-    std::cout << "Set Speed to : "<< speed << std::endl;
-    return speed;
-}
+
 
 void Worm::move(sf::Vector2f targetPos)
 {
     
     Line HeadToTarget(sf::Vector2f(1920/2,1080/2), targetPos);
-    sf::Vector2f newHeadPos = HeadToTarget.newWormHeadPosition(wormParts[0].getRadius()/speed);
+    sf::Vector2f newHeadPos = HeadToTarget.newWormHeadPosition((wormParts[0].getRadius()/speed)*accelerateVal);
     wormParts[0].move(newHeadPos);
 
 
@@ -44,7 +42,7 @@ void Worm::move(sf::Vector2f targetPos)
         Line HeadToTarget(wormParts[i].getPosition(), old.getPosition());
         if(HeadToTarget.length>wormParts[i].getRadius())
         {
-            newHeadPos = HeadToTarget.newWormHeadPosition(wormParts[i].getRadius()/speed);
+            newHeadPos = HeadToTarget.newWormHeadPosition((wormParts[i].getRadius() / speed)*accelerateVal);
             wormParts[i].move(newHeadPos);
         }
         old = wormParts[i];
@@ -52,38 +50,27 @@ void Worm::move(sf::Vector2f targetPos)
 
 }
 
+
+
 void Worm::drawWorm()
 {
-
+   
     for (int i = 0; i<length; i++)
     {
+        
         //   mainPlayer.wormParts[i].setTexture(&texturek);
-        okno->draw(wormParts[i]);
+        Window->draw(wormParts[i]);
         move(static_cast<sf::Vector2f>(sf::Mouse::getPosition()));
         wormParts[i].setTexture(&texture);
     }
 }
 
-Worm::Worm(float radius, int wormLength, sf::RenderWindow &Window) :
-    length(wormLength),
-    speed(300)
-{
-    Worm::radius = static_cast<int>(radius);
-    okno = &Window;
-    wormParts = new sf::CircleShape[length];
-    for (int i = 0; i < length; i++)
-    {
-        
-        wormParts[i] = sf::CircleShape();
-        wormParts[i].setRadius(radius);
-        wormParts[i].move(-i * radius, 0);
-        wormParts[i].move(1000, 1000);
-    }
-}
 
-Worm::Worm(float radius, int wormLength, sf::RenderWindow & Window, std::string texturePath) :
+
+Worm::Worm(float radius, int wormLength, sf::RenderWindow & window, std::string texturePath) :
     length(wormLength),
-    speed(300)
+    speed(250),
+    accelerateVal(0)
 {
 
   
@@ -93,15 +80,17 @@ Worm::Worm(float radius, int wormLength, sf::RenderWindow & Window, std::string 
     }
 
 
-    okno = &Window;
+    Window = &window;
     wormParts = new sf::CircleShape[length];
+    sf::Vector2f randomDirection(genDiretion(randgen), genDiretion(randgen));
     for (int i = 0; i < length; i++)
     {
 
         wormParts[i] = sf::CircleShape();
         wormParts[i].setRadius(radius);
-        wormParts[i].move(-i * radius, 0);
-        wormParts[i].move(1000, 1000);
+        if (i)
+            wormParts[i].setPosition(wormParts[i - 1].getPosition());
+        wormParts[i].move(randomDirection.x*i, randomDirection.y*i);
     }
 }
 

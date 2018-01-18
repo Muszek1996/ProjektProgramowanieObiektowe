@@ -6,7 +6,7 @@ int Circle::maxRadius = 10;
 int Circle::minRadius = 3;
 
 std::random_device rd;
-std::uniform_int_distribution<int> gen(0, 1970);
+std::uniform_int_distribution<int> gen(-2000, 2000);
 std::uniform_int_distribution<int> genRadius(Circle::minRadius, Circle::maxRadius);
 std::uniform_int_distribution<int> colorGen(0, 255);
 
@@ -19,9 +19,9 @@ void Circle::drawCircle()
     Window->draw(circle);
 }
 
-Circle::Circle(sf::RenderWindow &Window)
+Circle::Circle(sf::RenderWindow &window)
 {
-        Circle::Window = &Window;
+        Circle::Window = &window;
         radius = genRadius(rd);
         circle.setRadius(radius);
         position = sf::Vector2f(gen(rd), gen(rd));

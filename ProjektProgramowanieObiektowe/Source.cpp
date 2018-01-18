@@ -1,10 +1,5 @@
-#include <SFML/Graphics.hpp>
-#include <SFML/Graphics/CircleShape.hpp>
-#include <iostream>
-using namespace std;
 #include "Worm.h"
 #include "Display.h"
-#include "Food.h"
 
 int main()
 {
